@@ -2,7 +2,7 @@ import CookieManager from '@react-native-cookies/cookies';
 import React, { useEffect, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import WebView from 'react-native-webview';
-import { Button, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { Button, Linking, Text, TouchableHighlight, TouchableOpacity } from 'react-native';
 
 CookieManager.get('https://chat-hrd.vercel.app')
   .then((cookies) => {
@@ -87,6 +87,12 @@ const App = () => {
         bounces={false}
         source={{ uri: 'https://chat-hrd.vercel.app' }}
         onMessage={onMessage}
+        onNavigationStateChange={(event) => {
+          if (event.url !== 'https://chat-hrd.vercel.app') {
+            webviewRef.current.stopLoading();
+            Linking.openURL(event.url);
+          }
+        }}
       />
     </>
   );
